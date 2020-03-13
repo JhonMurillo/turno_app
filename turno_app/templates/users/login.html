@@ -1,0 +1,32 @@
+{% extends "users/base.html" %}
+
+{% block title %}
+    Iniciar Sesion
+{% endblock%}
+
+{% block container %}
+
+{% if form.errors %}
+<div class="alert alert-danger">
+    Tu Usuario y Contraseña no existen en nuestra applicacion.
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endif%}
+
+<form method="POST" action="{% url 'users:login' %}">
+    {% csrf_token %}
+
+    <div class="form-group">
+        <input type="text" class="form-control" placeholder="Usuario" name="username" />
+    </div>
+    <div class="form-group">
+        <input type="password" class="form-control" placeholder="Contraseña" name="password" />
+    </div>
+    <button type="submit" class="btn btn-primary btn-block mt-5">Iniciar Sesion!</button>
+
+</form>
+<!-- <p class="mt-4">Don't have an account yet? <a href="{% url 'users:signup' %}">Registrate</a></p> -->
+
+{% endblock %}
