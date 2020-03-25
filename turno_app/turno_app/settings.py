@@ -46,7 +46,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    #Third Apps
+    'channels',
+    'background_task',
+    'storages',
+    #Local Apps
     'users',
+    'turnos'
 ]
 
 MIDDLEWARE = [
@@ -76,6 +82,16 @@ TEMPLATES = [
         },
     },
 ]
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'asgi_redis.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('localhost', 6379)],
+        },
+        'ROUTING': 'turno_app.routing.channel_routing',
+    }
+}
 
 WSGI_APPLICATION = 'turno_app.wsgi.application'
 

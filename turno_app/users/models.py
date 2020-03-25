@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 # Create your models here.
+from turnos.models import Empresa
 
 class Profile(models.Model):
 
@@ -15,7 +16,7 @@ class Profile(models.Model):
 
     # Proxy user atuh    
     user = models.OneToOneField(User,on_delete=models.CASCADE)
-
+    empresa = models.ForeignKey(Empresa,on_delete=models.CASCADE)
     website = models.URLField(max_length = 200,blank=True)
     biography = models.TextField(blank=True)
     phone_number = models.CharField(max_length=20,blank=True)
@@ -24,11 +25,11 @@ class Profile(models.Model):
         blank=True,
         null=True
     )
-    rol = models.CharField(max_length=100, choices=ROLES, default=CLIENT)
+    rol = models.CharField(max_length=100, choices=ROLES, default=ASESOR)
 
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
 
 
-def __str__(self):
-    return self.user.username
+    def __str__(self):
+        return self.user.username
