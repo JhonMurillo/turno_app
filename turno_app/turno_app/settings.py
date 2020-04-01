@@ -84,16 +84,16 @@ TEMPLATES = [
 ]
 
 CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'asgi_redis.RedisChannelLayer',
-        'CONFIG': {
-            'hosts': [('localhost', 6379)],
+    "default": {
+        "CONFIG": {
+            "hosts": [('localhost','6379')],
         },
-        'ROUTING': 'turno_app.routing.channel_routing',
-    }
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+    },
 }
 
 WSGI_APPLICATION = 'turno_app.wsgi.application'
+ASGI_APPLICATION = 'turno_app.routing.application'
 
 
 # Database

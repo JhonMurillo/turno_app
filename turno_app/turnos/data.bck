@@ -1,0 +1,20 @@
+<div class="form-group">
+                    <input class="form-control {% if form.cliente.errors %}is-invalid{% endif %}" type="text"
+                        name="cliente" placeholder="Cliente">
+                    <div class="invalid-feedback">
+                        {% for error in form.cliente.errors %}{{ error }}{% endfor %}
+                    </div>
+                </div>
+
+                {# asesor field #}
+                <div class="form-group">
+                    <label>Asesores:</label>
+                    <select name="asesor" class="form-control {% if form.asesor.errors %}is-invalid{% endif %}">
+                        {% for asesor in asesores %}
+                        <option>{{asesor.user.get_full_name}}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="invalid-feedback">
+                        {% for error in form.asesor.errors %}{{ error }}{% endfor %}
+                    </div>
+                </div>

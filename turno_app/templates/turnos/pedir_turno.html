@@ -1,0 +1,59 @@
+{% extends "turnos/base.html" %}
+
+{% block cliente %}
+Pedir Turnos
+{% endblock%}
+
+{% block container %}
+<div class="container">
+    <div class="row justify-content-md-center">
+        <div class="col-6 pt-3 pb-3" id="profile-box">
+            <h4 class="mb-4">Pide Tu Turno en {{empresa}}!</h4>
+            {% if messages %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <h4 class="alert-heading">Turno #</h4>
+                <hr>
+                {% for message in messages %}
+                <h1>{{ message }}</h1>
+                {% endfor %}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endif %}
+            <form method="POST" action="{% url 'turnos:pedir_turno' slug_identificador %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <input class="form-control {% if form.cliente.errors %} is-invalid {% endif %}" type="text"
+                        name="cliente" placeholder="Cliente"
+                        value="{% if form.errors %}{{form.cliente.value}}{% endif %}">
+
+                    <div class="invalid-feedback">
+                        {% for error in form.cliente.errors %} {{ error }} {% endfor %}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Asesores:</label>
+                    <select name="asesor" id="asesor"
+                        class="form-control {% if form.asesor.errors %} is-invalid {% endif %}">
+                        {% for asesor in asesores %}
+                        <option value="{{asesor.pk}}">{{asesor.user.get_full_name}}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="invalid-feedback">
+                        {% for error in form.asesor.errors %}{{ error }}{% endfor %}
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block mt-5">Pedir!</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+
+</script>
+{% endblock script %}

@@ -1,25 +1,41 @@
 import json
-from channels import Group
-# from channels.auth import channel_session_user, channel_session_user_from_http
+from channels.generic.websocket import WebsocketConsumer
+from asgiref.sync import async_to_sync
+from turnos.models import Turno
+
+class TurnosConsumer(WebsocketConsumer):
+    def connect(self):
+        self.slug_identificador = self.scope['url_route']['kwargs']['slug_identificador']
+        async_to_sync(self.channel_layer.group_add)(
+            self.slug_identificador,
+            self.channel_name
+        )
+
+        turnos_organizados = Turno.get_turnos(self.slug_identificador)
+
+        # Send message to group
+        async_to_sync(self.channel_layer.group_send)(
+            self.slug_identificador,
+            {
+            'type': 'send_turnos',
+            'turnos_organizados': turnos_organizados
+            }
+        )
+        self.accept()
+        print("#######CONNECTED############")
 
 
-# @channel_session_user_from_http
-def ws_connect(message):
-    Group('turnos').add(message.reply_channel)
-    Group('turnos').send({
-        'text': json.dumps({
-            'username': message.user.username,
-            'is_logged_in': True
-        })
-    })
+    def disconnect(self, close_code):
+        print('Disconecting...', close_code)
 
+    def receive(self, text_data):
+        pass
 
-# @channel_session_user
-def ws_disconnect(message):
-    Group('turnos').send({
-        'text': json.dumps({
-            'username': message.user.username,
-            'is_logged_in': False
-        })
-    })
-    Group('turnos').discard(message.reply_channel)
+    def send_turnos(self, event):
+        print("#######SEDING MESSAGE############")
+        turnos_organizados = event['turnos_organizados']
+        # Send message to websocket
+        self.send(text_data=json.dumps({
+            'turnos_organizados': turnos_organizados
+        }))
+        print("#######MESSAGE SENT############")
